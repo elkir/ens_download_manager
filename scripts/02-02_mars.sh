@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+## 02-02_mars.sh list/list_cost/request filename
+
 source $CONDA_PREFIX/etc/profile.d/conda.sh
 conda activate mars-api;
 
