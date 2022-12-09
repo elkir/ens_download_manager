@@ -1,0 +1,97 @@
+2022-12-07 04:12:25 ECMWF API python library 1.6.3
+2022-12-07 04:12:25 ECMWF API at https://api.ecmwf.int/v1
+2022-12-07 04:12:25 Welcome Petr Dolezal
+2022-12-07 04:12:25 In case of problems, please check https://confluence.ecmwf.int/display/WEBAPI/Web+API+FAQ or contact servicedesk@ecmwf.int
+2022-12-07 04:12:25 Request submitted
+2022-12-07 04:12:25 Request id: 639012a9ed7e75af57d9ff57
+2022-12-07 04:12:25 Request is submitted
+2022-12-07 04:12:27 Request is active
+2022-12-07 05:34:26 Calling 'nice mars /tmp/20221207-0410/9f/tmp-_marsycfqfP.req'
+2022-12-07 05:34:26 mars - WARN -
+2022-12-07 05:34:26 mars - WARN -
+2022-12-07 05:34:26 MIR environment variables:
+2022-12-07 05:34:26 MIR_CACHE_PATH=/data/ec_coeff
+2022-12-07 05:34:26 Using MARS binary: /usr/local/apps/mars/versions/20220411095548/bin/mars.bin
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Welcome to MARS
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - MARS Client build stamp: 20220411095548
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - MARS Client bundle version: 6.33.9.0
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - package mars-client version: 6.33.9
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - package mir version: 1.12.1
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - package odc version: 1.4.4
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - package fdb version: 5.10.7
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - package metkit version: 1.9.1
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - package eckit version: 1.19.0
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - package eccodes version: 2.25.1
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Maximum retrieval size is 75.00 G
+2022-12-07 05:34:26 retrieve,target="output",stream=enfo,area=72/-12/33/34.8,levtype=sfc,number=1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24/25/26/27/28/29/30/31/32/33/34/35/36/37/38/39/40/41/42/43/44/45/46/47/48/49/50,param=129.128/134.128/165.128/166.128/167.128/169.128/175.128/176.128/205.128/236.128/246.228/247.228,padding=0,step=360/366/372/378/384/390/396/402/408/414/420/426/432/438/444/450/456/462/468/474/480/486/492/498/504/510/516/522/528/534/540/546/552/558/564/570/576/582/588/594/600/606/612/618/624/630/636/642/648/654/660/666/672/678/684/690/696/702/708/714/720/726/732/738/744/750/756/762/768/774/780/786/792/798/804/810/816/822/828/834/840/846/852/858/864/870/876/882/888/894/900/906/912/918/924/930/936/942/948/954/960/966/972/978/984/990/996/1002/1008/1014/1020/1026/1032/1038/1044/1050/1056/1062/1068/1074/1080/1086/1092/1098/1104,grid=0.3/0.3,expver=1,time=00:00:00,date=2017-01-12,type=pf,class=odmars - INFO   - 20221207.041226 - Automatic split by date is on
+2022-12-07 05:34:26 
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Processing request 1
+2022-12-07 05:34:26 sh: /usr/bin/mailx: No such file or directory
+2022-12-07 05:34:26 
+2022-12-07 05:34:26 RETRIEVE,
+2022-12-07 05:34:26     CLASS      = OD,
+2022-12-07 05:34:26     TYPE       = PF,
+2022-12-07 05:34:26     STREAM     = ENFO,
+2022-12-07 05:34:26     EXPVER     = 0001,
+2022-12-07 05:34:26     REPRES     = SH,
+2022-12-07 05:34:26     LEVTYPE    = SFC,
+2022-12-07 05:34:26     PARAM      = 129.128/134.128/165.128/166.128/167.128/169.128/175.128/176.128/205.128/236.128/246.228/247.228,
+2022-12-07 05:34:26     TIME       = 0000,
+2022-12-07 05:34:26     STEP       = 360/366/372/378/384/390/396/402/408/414/420/426/432/438/444/450/456/462/468/474/480/486/492/498/504/510/516/522/528/534/540/546/552/558/564/570/576/582/588/594/600/606/612/618/624/630/636/642/648/654/660/666/672/678/684/690/696/702/708/714/720/726/732/738/744/750/756/762/768/774/780/786/792/798/804/810/816/822/828/834/840/846/852/858/864/870/876/882/888/894/900/906/912/918/924/930/936/942/948/954/960/966/972/978/984/990/996/1002/1008/1014/1020/1026/1032/1038/1044/1050/1056/1062/1068/1074/1080/1086/1092/1098/1104,
+2022-12-07 05:34:26     NUMBER     = 1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24/25/26/27/28/29/30/31/32/33/34/35/36/37/38/39/40/41/42/43/44/45/46/47/48/49/50,
+2022-12-07 05:34:26     DOMAIN     = G,
+2022-12-07 05:34:26     TARGET     = "output",
+2022-12-07 05:34:26     RESOL      = AUTO,
+2022-12-07 05:34:26     AREA       = 72/-12/33/34.8,
+2022-12-07 05:34:26     GRID       = 0.3/0.3,
+2022-12-07 05:34:26     PADDING    = 0,
+2022-12-07 05:34:26     DATE       = 20170112
+2022-12-07 05:34:26 
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Web API request id: 639012a9ed7e75af57d9ff57
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Requesting 75000 fields
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Setting SO_SNDBUF to 33554432 (32.00 M)
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Current value is 8192 (8.00 K)
+2022-12-07 05:34:26 mars - WARN   - 20221207.041226 - SO_SNDBUF limited by kernel to 212992 (208.00 K)
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Setting SO_RCVBUF to 33554432 (32.00 M)
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Current value is 43690 (42.67 K)
+2022-12-07 05:34:26 mars - WARN   - 20221207.041226 - SO_RCVBUF limited by kernel to 212992 (208.00 K)
+2022-12-07 05:34:26 mars - INFO   - 20221207.041226 - Calling mars on 'fdbprod', local port is 46163
+2022-12-07 05:34:26 mars - INFO   - 20221207.041227 - Server task is 953 [ATOS FDB]
+2022-12-07 05:34:26 mars - INFO   - 20221207.041227 - Retrieving from FDB [ATOS FDB]
+2022-12-07 05:34:26 mars - INFO   - 20221207.041227 - Looking up FDB indexes: 0.004327 second elapsed, 0.003452 second cpu [ATOS FDB]
+2022-12-07 05:34:26 mars - INFO   - 20221207.041227 - Calling mars on 'fdbbc', local port is 56052
+2022-12-07 05:34:26 mars - INFO   - 20221207.041227 - Server task is 91 [ATOS FDB BC]
+2022-12-07 05:34:26 mars - INFO   - 20221207.041227 - Retrieving from FDB [ATOS FDB BC]
+2022-12-07 05:34:26 mars - INFO   - 20221207.041227 - Looking up FDB indexes: 0.002496 second elapsed, 0.000663 second cpu [ATOS FDB BC]
+2022-12-07 05:34:26 mars - INFO   - 20221207.041227 - Calling mars on 'marsod-core', local port is 56121
+2022-12-07 05:34:26 mars - INFO   - 20221207.044932 - Server task is 500 [marsod]
+2022-12-07 05:34:26 mars - INFO   - 20221207.044932 - Request cost: 75,000 fields, 60.3174 Gbytes on 1 tape, nodes: hpss, libraries: ibmlib08 [marsod]
+2022-12-07 05:34:26 mars - INFO   - 20221207.044932 - The efficiency of your requests in the last 12 hours is 100% [marsod]
+2022-12-07 05:34:26 mars - INFO   - 20221207.052113 - Transfering 64765302000 bytes
+2022-12-07 05:34:26 mars - INFO   - 20221207.052114 - Cache file /data/ec_coeff/mir/weights/15/linear/R640-cbba2659c1c60ed049633eb6f4c2c675-89.8924:0:-89.8924:359.86/LL-0.3x0.3-72:-12:33:34.8-5bddb0c03ae408f9c8ec5f9b4ab59d90.mat does not exist
+2022-12-07 05:34:26 mars - INFO   - 20221207.052114 - Creating cache file /data/ec_coeff/mir/weights/15/linear/R640-cbba2659c1c60ed049633eb6f4c2c675-89.8924:0:-89.8924:359.86/LL-0.3x0.3-72:-12:33:34.8-5bddb0c03ae408f9c8ec5f9b4ab59d90.mat
+2022-12-07 05:34:26 mars - INFO   - 20221207.052114 - CacheManager creating file /data/ec_coeff/mir/weights/15/linear/R640-cbba2659c1c60ed049633eb6f4c2c675-89.8924:0:-89.8924:359.86/LL-0.3x0.3-72:-12:33:34.8-5bddb0c03ae408f9c8ec5f9b4ab59d90.mat
+2022-12-07 05:34:26 mars - INFO   - 20221207.052130 - Cache file /data/ec_coeff/mir/weights/15/linear/R320-440b952c43f5fbe93a3d5b38b159f738-89.7849:0:-89.7849:359.722/LL-0.3x0.3-72:-12:33:34.8-d0b3169a374351199d1e1eb45e67678e.mat does not exist
+2022-12-07 05:34:26 mars - INFO   - 20221207.052130 - Creating cache file /data/ec_coeff/mir/weights/15/linear/R320-440b952c43f5fbe93a3d5b38b159f738-89.7849:0:-89.7849:359.722/LL-0.3x0.3-72:-12:33:34.8-d0b3169a374351199d1e1eb45e67678e.mat
+2022-12-07 05:34:26 mars - INFO   - 20221207.052130 - CacheManager creating file /data/ec_coeff/mir/weights/15/linear/R320-440b952c43f5fbe93a3d5b38b159f738-89.7849:0:-89.7849:359.722/LL-0.3x0.3-72:-12:33:34.8-d0b3169a374351199d1e1eb45e67678e.mat
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 - 75000 fields retrieved from 'marsod'
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 - 75000 fields have been interpolated
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 - Request time:  wall: 1 hour 21 min 9 sec  cpu: 11 min
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 -   Processing in marsod: wall: 1 hour 8 min 46 sec
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 -   Visiting marsod: wall: 1 hour 21 min 8 sec
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 -   Read from network: 60.32 Gbyte(s) in 2 min 13 sec  [464.87 Mbyte/sec]
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 -   Post-processing: wall: 8 min 55 sec cpu: 8 min 55 sec
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 -   Writing to target file: 2.88 Gbyte(s) in 4 sec  [793.98 Mbyte/sec] cpu: 4 sec
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 - Memory used: 763.07 Mbyte(s)
+2022-12-07 05:34:26 mars - INFO   - 20221207.053335 - No errors reported
+2022-12-07 05:34:26 Process '['nice', 'mars', '/tmp/20221207-0410/9f/tmp-_marsycfqfP.req']' finished
+2022-12-07 05:34:26 Request is complete
+2022-12-07 05:34:26 Transfering 2.88449 Gbytes into data/mars_v03d_2017-01-12.grib
+2022-12-07 05:34:26 From https://stream.ecmwf.int/data/webmars-private-svc-blue-001/data/scratch/20221207-0410/6d/_mars-webmars-private-svc-blue-001-6fe5cac1a363ec1525f54343b6cc9fd8-O9MCQC.grib
+2022-12-07 05:35:36 Transfer rate 42.4062 Mbytes/s
+2022-12-07 05:35:36 Done
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   136  100    46  100    90    166    325 --:--:-- --:--:-- --:--:--   326
+Congratulations! You've fired the notify event
+
