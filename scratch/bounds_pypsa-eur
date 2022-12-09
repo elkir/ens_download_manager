@@ -1,0 +1,16 @@
+
+#this example will filter the area of Europe (N/W/S/E) and interpolate the final fields to a lat/lon 0.5/0.5 degrees
+AREA="73.5/-27/33/45"
+GRID="0.5,0.5"
+
+# PyPSA eur MY cutout parameters 
+# lon      (x) float64 -12.0 -11.7 -11.4 -11.1 -10.8 ... 33.9 34.2 34.5 34.8
+# lat      (y) float64 33.0 33.3 33.6 33.9 34.2 ... 70.8 71.1 71.4 71.7 72.0
+AREA="72/-12/33/34.8"
+GRID="0.3,0.3"
+
+# PyPSA eur MAX cutout parameters 
+# lon      (x) float64 -12.0 -11.7 -11.4 -11.1 -10.8 ... 33.9 34.2 34.5 34.8
+# lat      (y) float64 33.0 33.3 33.6 33.9 34.2 ... 70.8 71.1 71.4 71.7 72.0
+AREA="75/-16.5/32/40.5"
+GRID="0.3,0.3"
