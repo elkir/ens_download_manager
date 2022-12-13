@@ -149,8 +149,22 @@ EOF
             else 
                 echo "LIST_COST: All $Nfields fields available"
             fi
+            storage=quota | grep /rds-d7 | awk '{print $3-$2}'
+            storage_max=quota | grep /rds-d7 | awk '{print $4-$2}'
             filesize=$(cat "/tmp/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}")
             echo "The file size should be $(numfmt --to=iec $filesize)"
+            # convert filesize to GB and check if enough storage available
+            filesizeGB=$(echo $filesize | awk "{print $filesize/1024/1024/1024}")
+            if [[ $filesizeGB -gt $storage ]]
+                then
+                    echo "WARNING: Not enough storage available, entering grace limit" | sed -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/"
+                    if [[ $filesizeGB -gt $storage_max ]]
+                        then
+                            echo "ERROR: Not enough storage available, exiting process" | sed -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/"
+                            exit 1
+                    fi
+            fi
+    
             rm /tmp/$filename_date.list_cost
     fi
     #print start line in colour
