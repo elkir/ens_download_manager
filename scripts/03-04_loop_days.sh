@@ -22,8 +22,8 @@ for i in $(eval echo {$1..$1}-{$2..$3}-{01..31}); do
                     continue
                 fi
                 # request data for date $i
-                { 
-                echo "data/mars_v04${x}_${i}_$(date -d $i +%a).grib" | # print bold and colored
+                { echo "data/mars_v04${x}_${i}_$(date -d $i +%a).grib" | 
+                    # print bold and colored
                     sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
                         -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/";
                 ./scripts/03-04_mars.sh -N request v04$x $i || 
