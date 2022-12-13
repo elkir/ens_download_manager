@@ -43,7 +43,7 @@ datetime=$(date -Iminutes | sed "s/T/ /"| sed "s/+.*//")
 Npar=$(($(cat requests/$filename_req.req | sed -n "s/param=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
 Nens=$(($(cat requests/$filename_req.req | sed -n "s/number=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
 Nstep=$(($(cat requests/$filename_req.req | sed -n "s/step=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
-
+Nfields=$(($Npar*$Nens*$Nstep))
 
 
 # function  definition (for recursion)
@@ -51,12 +51,24 @@ Nstep=$(($(cat requests/$filename_req.req | sed -n "s/step=\(.*\)/\1/p" | tr -dc
 # $2: filename of outfile
 # $3: date: YYYY-MM-DD
 function send_request() { 
-    # recursion
+    # recursion: run list_cost to check fields
     if [[ $1 == request ]]
         then
             echo "REQUEST: Checking if fields are available"
             #TODO run a request and check fields 
-            send_request list_cost $2 $3
+            send_request list_cost /tmp/$filename_date.list_cost $3 
+            if [[ $(cat "/tmp/$filename_date.list_cost" | sed -n "s/^number_of_fields=\([0-9]*\);/\1/p") -lt $(($Npar*$Nens*$Nstep)) ]]
+                then
+                    echo "LIST_COST Not enough fields available"
+                    Navail=$(cat "/tmp/$filename_date.list_cost" | sed -n "s/^number_of_fields=\([0-9]*\);/\1/p")
+                    echo "Fields: $Navail/$Nfields"
+                    exit 1
+            else 
+                echo "LIST_COST: All $Nfields fields available"
+            fi
+            filesize=$(cat "/tmp/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}")
+            echo "The file size should be $(numfmt --to=iec $filesize)"
+            # rm /tmp/$filename_date.list_cost
     fi
     #print start line in colour
     echo "--------------start -----------------" | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
@@ -78,6 +90,7 @@ function send_request() {
     fi |
     # insert date
     sed "4 i date = $3,"|
+    tee "/tmp/$filename_date.req" | # save request to file
     # main request
     # print in colour
     sed -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/" 
@@ -85,22 +98,20 @@ function send_request() {
     echo "---------------------------------"    | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
 
     # print all input parameters
-    echo "Npar = $Npar"
-    echo "Nens = $Nens"
-    echo "Nstep = $Nstep"
-    echo "filename_req = $filename_req"
-    echo "filename_date = $filename_date"
-    echo "datetime = $datetime"
-    echo "out_folder = $out_folder"
-    echo "extension = $extension"
+ 
     echo "1 = $1"
     echo "2 = $2"
     echo "3 = $3"
 
     echo "---------------------------------"    | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
 
-    # print paragraph of Lorem Ipsum
-    cat << EOF
+    # if list_cost 
+    if [[ $1 == list_cost ]]
+        then
+            cat /tmp/$filename_date.req | mars -o $2 > /dev/null
+    else
+        # print request code only
+        cat << EOF
 mars -o $2 &&
 # notification if request was successful
         if [[ $1 == request ]]
@@ -110,6 +121,10 @@ mars -o $2 &&
                    https://maker.ifttt.com/trigger/notify/with/key/dHmvWjsHHJvHLg6ejV48do ;
         fi
 EOF
+
+    fi
+
+    
 
 #     echo <<EOF
 #         mars -o "$out_folder/$filename_date.$extension" && 
@@ -127,7 +142,15 @@ EOF
 
  } 
 
-
+echo "Npar = $Npar"
+echo "Nens = $Nens"
+echo "Nstep = $Nstep"
+echo "Nfields = $((Npar*Nens*Nstep))" | sed -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/"
+echo "filename_req = $filename_req"
+echo "filename_date = $filename_date"
+echo "datetime = $datetime"
+echo "out_folder = $out_folder"
+echo "extension = $extension"
  
 send_request $1 "$out_folder/$filename_date.$extension" $3
 #  |&
@@ -139,11 +162,11 @@ send_request $1 "$out_folder/$filename_date.$extension" $3
 #         cat
 # fi
 # # for list_cost print size in GB
-# if [[ $1 == list_cost ]]
-#     then
-#         echo "The total full request size is: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | numfmt --to=iec)"
-#         echo "The cropped size should be $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}" | numfmt --to=iec)"
-#         echo "Number of fields requested: $(($Npar*$Nens*$Nstep))"
-#         echo "Number of fields available: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^number_of_fields=\([0-9]*\);/\1/p")"
-# fi
+if [[ $1 == list_cost ]]
+    then
+        echo "The total full request size is: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | numfmt --to=iec)"
+        echo "The cropped size should be $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}" | numfmt --to=iec)"
+        echo "Number of fields requested: $(($Npar*$Nens*$Nstep))"
+        echo "Number of fields available: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^number_of_fields=\([0-9]*\);/\1/p")"
+fi
 
