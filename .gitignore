@@ -3,6 +3,7 @@ archive
 test*
 lists
 *copilotstuff.sh
+sandbox/copilotstuff.sh
 
 .vscode/
 
