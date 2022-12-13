@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
-## 02-04_mars.sh  list[_cost]/request  v04[d,e,...] YYYY-MM-DD
+## 02-04_mars.sh  
+# arguments
+# $1: type: list[_cost]/request
+# $2: version: v04[d,e,...]
+# $3: date: YYYY-MM-DD
 
-source $CONDA_PREFIX/etc/profile.d/conda.sh
+# check if all arguments are given
+if [[ $# -ne 3 ]]
+    then
+        echo "Usage: $0 <type> <version> <date>"
+        exit 1
+fi
+
+
 conda activate mars-api;
 
-# print which day of the week date is
-echo "The date is $(date -d $3 +%A)";
+# print which day of the week date is (in cyan)
+echo "The date is $(date -d $3 +%A)" | sed -e "s/^/$(tput setaf 6)/" -e "s/$/$(tput sgr0)/"
 
-# grab and define variables
+# grab and define output folder and extension
 if [[ $1 == list* ]]
     then
         out_folder="lists"
@@ -26,7 +37,7 @@ if [[ $1 == request ]]
 fi
 
 filename_req="mars_$2_europe";
-filename_date="mars_$2_$3";
+filename_date="mars_$2_$3_$(date -d $3 +%a)"; #date + Mon/Thu
 datetime=$(date -Iminutes | sed "s/T/ /"| sed "s/+.*//")
 
 Npar=$(($(cat requests/$filename_req.req | sed -n "s/param=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
@@ -35,8 +46,21 @@ Nstep=$(($(cat requests/$filename_req.req | sed -n "s/step=\(.*\)/\1/p" | tr -dc
 
 
 
-# main request loop with logging 
+# function  definition (for recursion)
+# $1: type: list[_cost]/request
+# $2: filename of outfile
+# $3: date: YYYY-MM-DD
 function send_request() { 
+    # recursion
+    if [[ $1 == request ]]
+        then
+            echo "REQUEST: Checking if fields are available"
+            #TODO run a request and check fields 
+            send_request list_cost $2 $3
+    fi
+    #print start line in colour
+    echo "--------------start -----------------" | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
+
     cat "requests/$filename_req.req" | 
     sed "s/^#.*//g"| # remove comments
     awk NF | # remove empty lines
@@ -55,31 +79,71 @@ function send_request() {
     # insert date
     sed "4 i date = $3,"|
     # main request
-    mars -o "$out_folder/$filename_date.$extension" && 
-    # notification
-    if [[ $1 == request ]]
-        then
-            curl -X POST -H "Content-Type: application/json" \
-                -d "{\"value1\":\"($datetime) ECMWF $1 at $(hostname).hpc file: $filename_date\"}" \
-               https://maker.ifttt.com/trigger/notify/with/key/dHmvWjsHHJvHLg6ejV48do ;
-    fi
+    # print in colour
+    sed -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/" 
+    # print line in colour
+    echo "---------------------------------"    | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
+
+    # print all input parameters
+    echo "Npar = $Npar"
+    echo "Nens = $Nens"
+    echo "Nstep = $Nstep"
+    echo "filename_req = $filename_req"
+    echo "filename_date = $filename_date"
+    echo "datetime = $datetime"
+    echo "out_folder = $out_folder"
+    echo "extension = $extension"
+    echo "1 = $1"
+    echo "2 = $2"
+    echo "3 = $3"
+
+    echo "---------------------------------"    | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
+
+    # print paragraph of Lorem Ipsum
+    cat << EOF
+mars -o $2 &&
+# notification if request was successful
+        if [[ $1 == request ]]
+            then
+                curl -X POST -H "Content-Type: application/json" \
+                    -d "{\"value1\":\"($datetime) ECMWF $1 at $(hostname).hpc file: $filename_date\"}" \
+                   https://maker.ifttt.com/trigger/notify/with/key/dHmvWjsHHJvHLg6ejV48do ;
+        fi
+EOF
+
+#     echo <<EOF
+#         mars -o "$out_folder/$filename_date.$extension" && 
+#         # notification if request was successful
+#         if [[ $1 == request ]]
+#             then
+#                 curl -X POST -H "Content-Type: application/json" \
+#                     -d "{\"value1\":\"($datetime) ECMWF $1 at $(hostname).hpc file: $filename_date\"}" \
+#                    https://maker.ifttt.com/trigger/notify/with/key/dHmvWjsHHJvHLg6ejV48do ;
+#         fi
+# EOF
+
+    # print end line in colour
+    echo "--------------end -----------------" | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
+
  } 
+
+
  
- 
-send_request $1 $2 $3 |&
-# logging for requests
-if [[ $1 == request ]]
-    then
-        tee "logs/$filename_date.log" #-a
-    else
-        cat
-fi
-# for list_cost print size in GB
-if [[ $1 == list_cost ]]
-    then
-        echo "The total full request size is: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | numfmt --to=iec)"
-        echo "The cropped size should be $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}" | numfmt --to=iec)"
-        echo "Number of fields requested: $(($Npar*$Nens*$Nstep))"
-        echo "Number of fields available: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^number_of_fields=\([0-9]*\);/\1/p")"
-fi
+send_request $1 "$out_folder/$filename_date.$extension" $3
+#  |&
+# # logging for requests
+# if [[ $1 == request ]]
+#     then
+#         tee "logs/$filename_date.log" #-a
+#     else
+#         cat
+# fi
+# # for list_cost print size in GB
+# if [[ $1 == list_cost ]]
+#     then
+#         echo "The total full request size is: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | numfmt --to=iec)"
+#         echo "The cropped size should be $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}" | numfmt --to=iec)"
+#         echo "Number of fields requested: $(($Npar*$Nens*$Nstep))"
+#         echo "Number of fields available: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^number_of_fields=\([0-9]*\);/\1/p")"
+# fi
 
