@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-## 02-04_mars.sh  
+## use as 03-04_mars.sh [-v] [-N] <type> <version> <date>  
 # arguments
 # $1: type: list[_cost]/request
 # $2: version: v04[d,e,...]
 # $3: date: YYYY-MM-DD
+
+# URL for telegram notifications
+TELEGRAM_URL="https://api.telegram.org/bot5906083900:AAGkxZsnL-YvnoHVzotK-_VHNLdhx-UoAOM/sendMessage?chat_id=5889704030"
+
 
 #check for optional -v flag
 if [[ $1 == "-v" ]]
@@ -75,6 +79,7 @@ if [[ $1 == request ]]
         extension="$1"
 fi
 
+year=${3:0:4}
 filename_req="mars_$2_europe";
 filename_date="mars_$2_$3_$(date -d $3 +%a)"; #date + Mon/Thu
 datetime=$(date -Iminutes | sed "s/T/ /"| sed "s/+.*//")
@@ -169,6 +174,12 @@ EOF
     fi
     #print start line in colour
     echo "--------------start -----------------" | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
+    # if request and notif flag is set, send notification
+    if [[ $1 == request ]] && $notif
+        then
+            MESSAGE="ECMWF $1 at $(hostname).hpc file: $filename_date started"
+            curl -s "$TELEGRAM_URL&text=$MESSAGE"
+    fi
 
     cat "requests/$filename_req.req" | 
         sed "s/^#.*//g"| # remove comments
@@ -192,12 +203,14 @@ EOF
         # notification if request was successful and notif flag was set
         if [[ $1 == request ]] && $notif
             then
-                curl -X POST -H "Content-Type: application/json" \
-                    -d "{\"value1\":\"($datetime) ECMWF $1 at $(hostname).hpc file: $filename_date\"}" \
-                   https://maker.ifttt.com/trigger/notify/with/key/dHmvWjsHHJvHLg6ejV48do ;
+                MESSAGE="ECMWF $1 at $(hostname).hpc file: $filename_date finished successfully"
+                curl -s "$TELEGRAM_URL&text=$MESSAGE"
         fi
     echo "--------------end -----------------" | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
  } 
+
+
+
 
 # ------------------ main ------------------
 # call function
@@ -205,7 +218,7 @@ send_request $1 $out_file $3 |&
 # logging for requests
 if [[ $1 == request ]]
     then
-        tee "logs/$filename_date.log" #-a
+        tee "logs/v03-04_$year/$filename_date.log" #-a
     else
         cat
 fi
