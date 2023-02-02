@@ -177,7 +177,7 @@ EOF
     # if request and notif flag is set, send notification
     if [[ $1 == request ]] && $notif
         then
-            MESSAGE="ECMWF $1 at $(hostname).hpc file: $filename_date started"
+            MESSAGE="Request for $filename_date started"
             curl -s "$TELEGRAM_URL&text=$MESSAGE"
     fi
 
@@ -203,8 +203,9 @@ EOF
         # notification if request was successful and notif flag was set
         if [[ $1 == request ]] && $notif
             then
-                MESSAGE="ECMWF $1 at $(hostname).hpc file: $filename_date finished successfully"
+                MESSAGE="Request for $filename_date finished successfully"
                 curl -s "$TELEGRAM_URL&text=$MESSAGE"
+		echo -e '\n'
         fi
     echo "--------------end -----------------" | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
  } 

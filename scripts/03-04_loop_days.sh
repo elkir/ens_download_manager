@@ -5,6 +5,13 @@
 mkdir logs/v03-04_$1
 touch logs/v03-04_$1/failed_requests.log
 
+# URL for telegram notifications
+TELEGRAM_URL="https://api.telegram.org/bot5906083900:AAGkxZsnL-YvnoHVzotK-_VHNLdhx-UoAOM/sendMessage?chat_id=5889704030"
+
+# Notify telegram loop has started
+MESSAGE="ECMWF MARS Loop through year $1 for months $2 to $3 STARTED at $(hostname).hpc"
+curl -s "$TELEGRAM_URL&text=$MESSAGE"
+
 # catch force flag
 if [[ $4 == "-f" ]]; then
     force=true
@@ -39,6 +46,7 @@ done
 
 
 # if all the processes are done, then send a notification to telegram
-MESSAGE="MARS Loop through year $1 for months $2 to $3 DONE"
+MESSAGE="MARS Loop through year $1 for months $2 to $3 DONE at $(hostname).hpc"
 wait &&
- curl -s "https://api.telegram.org/bot5906083900:AAGkxZsnL-YvnoHVzotK-_VHNLdhx-UoAOM/sendMessage?chat_id=5889704030&text=$MESSAGE"
+ curl -s "$TELEGRAM_URL&text=$MESSAGE"
+echo -e 'n'
