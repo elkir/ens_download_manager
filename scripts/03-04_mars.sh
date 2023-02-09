@@ -160,7 +160,7 @@ EOF
                 sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}")
             echo "The file size should be $(numfmt --to=iec $filesize)"
             # convert filesize to GB and check if enough storage available
-            if (( $(echo "$filesize/1024^3>$storage" |bc) ))
+            if (( $(echo "$filesize/1024^3>$storage" | bc) ))
                 then
                     echo "WARNING: Not enough storage available, entering grace limit" | sed -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/"
                     MESSAGE="WARNING: Not enough storage available, entering grace limit"
@@ -173,8 +173,8 @@ EOF
                             exit 1
                     fi
             fi
-    
-            rm /tmp/$filename_date.list_cost
+
+            rm "/tmp/$filename_date.list_cost"
     fi
     #print start line in colour
     echo "--------------start -----------------" | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
