@@ -163,9 +163,13 @@ EOF
             if (( $(echo "$filesize/1024^3>$storage" |bc) ))
                 then
                     echo "WARNING: Not enough storage available, entering grace limit" | sed -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/"
+                    MESSAGE="WARNING: Not enough storage available, entering grace limit"
+                    curl -s "$TELEGRAM_URL&text=$MESSAGE"
                     if (( $(echo "$filesize/1024^3>$storage_max" |bc) ))
                         then
                             echo "ERROR: Not enough storage available, exiting process" | sed -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/"
+                            MESSAGE="ERROR: Not enough storage available, exiting process"
+                            curl -s "$TELEGRAM_URL&text=$MESSAGE"
                             exit 1
                     fi
             fi
