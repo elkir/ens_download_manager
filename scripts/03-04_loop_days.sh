@@ -51,16 +51,18 @@ curl -s "$TELEGRAM_URL&text=$MESSAGE"
 
 # loop through the list of request parameters and run the script
 for param in ${params[@]}; do
+    echo $param
     i=$(echo $param | cut -d' ' -f1)
     x=$(echo $param | cut -d' ' -f2)
-    # print the file name
-    echo "data/mars_v04${x}_${i}_$(date -d $i +%a).grib" | 
-        # print bold and colored
-        sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
-            -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/";
-    ./scripts/03-04_mars.sh -N request v04$x $i || 
-        echo "v04${x}_$i" >> logs/v03-04_$1/failed_requests.log
-done
+    echo "i: $i, x: $x"
+    # # print the file name
+    # echo "data/mars_v04${x}_${i}_$(date -d $i +%a).grib" | 
+    #     # print bold and colored
+    #     sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
+    #         -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/";
+    # ./scripts/03-04_mars.sh -N request v04$x $i || 
+    #     echo "v04${x}_$i" >> logs/v03-04_$1/failed_requests.log
+# done
 
 # check if all files exist and print missing files
 echo "Checking if all files exist:" | 
@@ -78,5 +80,5 @@ MESSAGE="MARS Loop through year $1 for months $2 to $3 DONE at $(hostname).hpc
 Files unsuccesful:
 $(printf "%s\n" "${missing_files[@]}")"
 wait &&
- curl -s "$TELEGRAM_URL&text=$MESSAGE"
+#  curl -s "$TELEGRAM_URL&text=$MESSAGE"
 echo -e 'n'
