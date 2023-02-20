@@ -3,8 +3,7 @@ archive
 test*
 lists
 *copilotstuff.sh
-sandbox/copilotstuff.sh
-
+sandbox/copilot*
 .vscode/
 
 # Byte-compiled / optimized / DLL files

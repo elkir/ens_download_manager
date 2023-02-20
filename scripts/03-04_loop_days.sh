@@ -42,12 +42,9 @@ for i in $(eval echo {$1..$1}-{$2..$3}-{01..31}); do
     fi
 done
 
-all_files=$(printf "%s\n" "${files[@]}")
-
+all_files=$(printf "%s%0A" "${files[@]}")
 # Notify telegram loop has started
-MESSAGE="ECMWF MARS Loop through year $1 for months $2 to $3 STARTED at $(hostname).hpc
-Files:
-$all_files"
+MESSAGE="ECMWF MARS Loop through year $1 for months $2 to $3 STARTED at $(hostname).hpc%0AFiles:%0A$all_files"
 curl -s "$TELEGRAM_URL&text=$MESSAGE"
 
 # loop through the list of request parameters and run the script
@@ -78,8 +75,6 @@ for file in ${files[@]}; do
 done
 
 # if all the processes are done, then send a notification to telegram
-MESSAGE="MARS Loop through year $1 for months $2 to $3 DONE at $(hostname).hpc
-Files unsuccesful:
-$(printf "%s\n" "${missing_files[@]}")"
+MESSAGE="MARS Loop through year $1 for months $2 to $3 DONE at $(hostname).hpc%0AFiles unsuccesful:%0A$(printf "%s%0A" "${missing_files[@]}")"
 wait && curl -s "$TELEGRAM_URL&text=$MESSAGE"
 echo -e '\n'
