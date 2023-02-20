@@ -42,7 +42,9 @@ for i in $(eval echo {$1..$1}-{$2..$3}-{01..31}); do
     fi
 done
 
-all_files=$(printf "%s%0A" "${files[@]}")
+# concatenate the files array to a string using url new line character
+# need to escape the new line character with another % sign
+all_files=$(printf "%s%%0A" "${files[@]}")
 # Notify telegram loop has started
 MESSAGE="ECMWF MARS Loop through year $1 for months $2 to $3 STARTED at $(hostname).hpc%0AFiles:%0A$all_files"
 curl -s "$TELEGRAM_URL&text=$MESSAGE"
@@ -75,6 +77,6 @@ for file in ${files[@]}; do
 done
 
 # if all the processes are done, then send a notification to telegram
-MESSAGE="MARS Loop through year $1 for months $2 to $3 DONE at $(hostname).hpc%0AFiles unsuccesful:%0A$(printf "%s%0A" "${missing_files[@]}")"
+MESSAGE="MARS Loop through year $1 for months $2 to $3 DONE at $(hostname).hpc%0AFiles unsuccesful:%0A$(printf "%s%%0A" "${missing_files[@]}")"
 wait && curl -s "$TELEGRAM_URL&text=$MESSAGE"
 echo -e '\n'
