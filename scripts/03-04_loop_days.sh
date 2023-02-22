@@ -42,11 +42,16 @@ for i in $(eval echo {$1..$1}-{$2..$3}-{01..31}); do
     fi
 done
 
+# save PID of this process and print it, to be used to wait for the process to finish
+echo "This loop has PID: $$" | 
+    sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
+        -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
+
 # concatenate the files array to a string using url new line character
 # need to escape the new line character with another % sign
 all_files=$(printf "%s%%0A" "${files[@]}")
 # Notify telegram loop has started
-MESSAGE="ECMWF MARS Loop through year $1 for months $2 to $3 STARTED at $(hostname).hpc%0AFiles:%0A$all_files"
+MESSAGE="ECMWF MARS Loop through year $1 for months $2 to $3 STARTED at $(hostname).hpc%0AProcess PID: $$%0AFiles:%0A$all_files"
 curl -s "$TELEGRAM_URL&text=$MESSAGE"
 
 # loop through the list of request parameters and run the script
