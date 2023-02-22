@@ -4,6 +4,11 @@
 # $1: type: list[_cost]/request
 # $2: version: v04[d,e,...]
 # $3: date: YYYY-MM-DD
+#
+# flags
+# -v: verbose
+# -N: send notification
+
 
 # URL for telegram notifications
 TELEGRAM_URL="https://api.telegram.org/bot5906083900:AAGkxZsnL-YvnoHVzotK-_VHNLdhx-UoAOM/sendMessage?chat_id=5889704030"
@@ -88,14 +93,16 @@ out_file="$out_folder/$filename_date.$extension"
 Npar=$(($(cat requests/$filename_req.req | sed -n "s/param=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
 Nens=$(($(cat requests/$filename_req.req | sed -n "s/number=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
 Nstep=$(($(cat requests/$filename_req.req | sed -n "s/step=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
-Nfields=$(($Npar*$Nens*$Nstep))
+# for E and D: Nyears should return 1 because hdate would be missing
+Nyears=$(($(cat requests/$filename_req.req | sed -n "s/hdate=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1)) 
+Nfields=$(($Npar*$Nens*$Nstep*$Nyears))
 
 
 # capitalize type
 type=$(echo $1 | awk '{print toupper($0)}')
 # line
 echo "----------------------------------------"
-echo "$type specifying: $Npar parameters, $Nens ensemble members, $Nstep steps"
+echo "$type specifying: $Npar parameters, $Nens ensemble members, $Nstep steps, $Nyears (re)forecast year(s)"
 
 # if verbose
 
