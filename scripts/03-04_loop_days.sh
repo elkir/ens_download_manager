@@ -76,10 +76,18 @@ missing_files=()
 
 for file in ${files[@]}; do
     if [ ! -f "data/$file" ]; then
-        echo "$file does not exist"
+        echo "$file does not exist" | 
+            sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
+                -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/";
         missing_files+=("$file")
     fi
 done
+# if no files are missing, then print a message
+if [ ${#missing_files[@]} -eq 0 ]; then
+    echo "All files exist" | 
+        sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
+            -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/";
+fi
 
 # if all the processes are done, then send a notification to telegram
 MESSAGE="MARS Loop through year $1 for months $2 to $3 DONE at $(hostname).hpc%0AFiles unsuccesful:%0A$(printf "%s%%0A" "${missing_files[@]}")"
