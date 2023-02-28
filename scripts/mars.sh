@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## use as 03-04_mars.sh [-v] [-N] <type> <version> <date>  
+## use as mars.sh [-v] [-N] <type> <version> <date>  
 # arguments
 # $1: type: list[_cost]/request
 # $2: version: v04[d,e,...]
@@ -8,7 +8,7 @@
 # flags
 # -v: verbose
 # -N: send notification
-
+version_script="04"
 
 # URL for telegram notifications
 TELEGRAM_URL="https://api.telegram.org/bot5906083900:AAGkxZsnL-YvnoHVzotK-_VHNLdhx-UoAOM/sendMessage?chat_id=5889704030"
@@ -89,6 +89,8 @@ filename_req="mars_$2_europe";
 filename_date="mars_$2_$3_$(date -d $3 +%a)"; #date + Mon/Thu
 datetime=$(date -Iminutes | sed "s/T/ /"| sed "s/+.*//")
 out_file="$out_folder/$filename_date.$extension"
+#only the version number, not the letter
+version_request=${2:1:2}
 
 Npar=$(($(cat requests/$filename_req.req | sed -n "s/param=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
 Nens=$(($(cat requests/$filename_req.req | sed -n "s/number=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
@@ -230,7 +232,7 @@ send_request $1 $out_file $3 |&
 # logging for requests
 if [[ $1 == request ]]
     then
-        tee "logs/v03-04_$year/$filename_date.log" #-a
+        tee "logs/v$version_script-$version_request_$year/$filename_date.log" #-a
     else
         cat
 fi
