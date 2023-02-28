@@ -1,11 +1,11 @@
-# use as ./scripts/loop_days.sh [-f] v03-04 2017 01 12
+# use as ./scripts/loop_days.sh [-f] v04-05 2017 01 12
 
 # loop through every date in the year 2017 in the format YYYY-MM-DD and print it if the date exists and is Monday or Thursday
 # print Thu for Thursday and Mon for Monday
 
 # Arguments:
 # -f: force flag, if set, then the script will not check if the file already exists and will overwrite it
-# v03-04: version: first number is the version of the script, second number is the version of the request
+# v04-05: version: first number is the version of the script, second number is the version of the request
 # 2017: year to loop through
 # 01: start month
 # 12: end month
@@ -43,7 +43,7 @@ params=()
 files=()
 # generate a list of request parameters i and x
 # for dates
-for i in $(eval echo {$year..$year}-{$month_start..$month_end}-{01..31});
+for i in $(eval echo {$year..$year}-{$month_start..$month_end}-{01..31}); do
     if date -d $i &> /dev/null; then # if date exists
         if [[ $(date -d $i +%u) == 1 ]] || [[ $(date -d $i +%u) == 4 ]]; then # if monday of thursday
             for x in e d;
@@ -57,7 +57,6 @@ for i in $(eval echo {$year..$year}-{$month_start..$month_end}-{01..31});
                 # save the request paramters to an array
                 params+=("$i,$x")
                 files+=("mars_v$version_request${x}_${i}_$(date -d $i +%a).grib")
-                
             done
         fi
     fi
