@@ -53,6 +53,8 @@ all_files=$(printf "%s%%0A" "${files[@]}")
 # Notify telegram loop has started
 MESSAGE="ECMWF MARS Loop through year $1 for months $2 to $3 STARTED at $(hostname).hpc%0AProcess PID: $$%0AFiles:%0A$all_files"
 curl -s "$TELEGRAM_URL&text=$MESSAGE"
+echo -e "\n"
+
 
 # loop through the list of request parameters and run the script
 for param in ${params[@]}; do
