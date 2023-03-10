@@ -2,7 +2,7 @@
 ## use as mars.sh [-v] [-N] <type> <version> <date>  
 # arguments
 # $1: type: list[_cost]/request
-# $2: version: v04[d,e,...]
+# $2: version: v05[d,e,...]
 # $3: date: YYYY-MM-DD
 #
 # flags
@@ -84,7 +84,8 @@ if [[ $1 == request ]]
         extension="$1"
 fi
 
-year=${3:0:4}
+date=$3
+year=${date:0:4}
 filename_req="mars_$2_europe";
 filename_date="mars_$2_$3_$(date -d $3 +%a)"; #date + Mon/Thu
 datetime=$(date -Iminutes | sed "s/T/ /"| sed "s/+.*//")
@@ -92,11 +93,23 @@ out_file="$out_folder/$filename_date.$extension"
 #only the version number, not the letter
 version_request=${2:1:2}
 
+# if version letter is "r" 
+if [[ ${2:3:1} == "r" ]] 
+    then
+        hdates=()
+        for i in $(seq $((year-20)) $((year-1))); do
+            hdates+=($(date -d "$i-$(date -d $date +%m)-$(date -d $date +%d)" +%Y-%m-%d))
+        done
+        hdate_line="hdate=${hdates[*]// //},"
+        # get length of dates array
+        Nyears=${#hdates[@]}
+    else
+        Nyears=1
+fi 
+
 Npar=$(($(cat requests/$filename_req.req | sed -n "s/param=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
 Nens=$(($(cat requests/$filename_req.req | sed -n "s/number=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
 Nstep=$(($(cat requests/$filename_req.req | sed -n "s/step=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1))
-# for E and D: Nyears should return 1 because hdate would be missing
-Nyears=$(($(cat requests/$filename_req.req | sed -n "s/hdate=\(.*\)/\1/p" | tr -dc "/" | wc -c )+1)) 
 Nfields=$(($Npar*$Nens*$Nstep*$Nyears))
 
 
@@ -242,7 +255,7 @@ if [[ $1 == list_cost ]]
         echo "LIST_COST:"
         echo "The total full request size is: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | numfmt --to=iec)"
         echo "The cropped size should be $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}" | numfmt --to=iec)"
-        echo "Number of fields requested: $(($Npar*$Nens*$Nstep))"
+        echo "Number of fields requested: $(($Nfields))"
         echo "Number of fields available: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^number_of_fields=\([0-9]*\);/\1/p")"
 fi
 
