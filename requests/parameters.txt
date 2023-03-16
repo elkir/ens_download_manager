@@ -1,0 +1,20 @@
+022.228 - cdir - Clear-sky direct solar radiation at surface [J m**-2]
+129.128 - z    - Geopotential [m**2 s**-2]
+134.128 - sp   - Surface pressure [Pa]
+165.128 - u10  - 10 metre U wind component [m s**-1]
+166.128 - v10  - 10 metre V wind component [m s**-1]
+167.128 - t2m  - 2 metre temperature [K]
+168.128 - d2m  - 2 metre dewpoint temperature [K]
+169.128 - ssrd - Surface solar radiation downwards [J m**-2]
+173.128 - sr   - Surface roughness [m]
+174.128 - al   - Albedo [(0 - 1)]
+175.128 - strd - Surface thermal radiation downwards [J m**-2]
+176.128 - ssr  - Surface net solar radiation [J m**-2]
+178.128 - tsr  - Top net solar radiation [J m**-2]
+205.128 - ro   - Runoff [m]
+236.128 - stl4 - Soil temperature level 4 [K]
+246.228 - u100 - 100 metre U wind component [m s**-1]
+247.228 - v100 - 100 metre V wind component [m s**-1]
+
+164.128 - TCC  - Total cloud cover
+021.222 - fdir - Total sky direct solar radiation at surface
