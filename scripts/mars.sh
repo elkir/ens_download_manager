@@ -90,17 +90,20 @@ filename_req="mars_$2_europe";
 filename_date="mars_$2_$3_$(date -d $3 +%a)"; #date + Mon/Thu
 datetime=$(date -Iminutes | sed "s/T/ /"| sed "s/+.*//")
 out_file="$out_folder/$filename_date.$extension"
+log_folder="logs/v${version_script}-${version_request}_${year}"
 #only the version number, not the letter
 version_request=${2:1:2}
+request_letter=${2:3:1}
 
 # if version letter is "r" 
-if [[ ${2:3:1} == "r" ]] 
+if [[ $request_letter == "r" ]] 
     then
         hdates=()
         for i in $(seq $((year-20)) $((year-1))); do
             hdates+=($(date -d "$i-$(date -d $date +%m)-$(date -d $date +%d)" +%Y-%m-%d))
         done
-        hdate_line="hdate=${hdates[*]// //},"
+        hdate_line="${hdates[*]}" # two steps because of bash
+        hdate_line="hdate=${hdate_line// //},"
         # get length of dates array
         Nyears=${#hdates[@]}
     else
@@ -132,6 +135,7 @@ datetime = $datetime
 out_folder = $out_folder
 extension = $extension
 out_file = $out_file
+hdate_line = $hdate_line
 EOF
 fi
 
@@ -224,6 +228,13 @@ EOF
         fi |
         # insert date
         sed "4 i date = $3,"|
+        # insert hdate for reforecast
+        if [[ $request_letter == "r" ]]
+            then
+                sed "5 i $hdate_line"
+            else
+                cat
+        fi |
     # main request
     mars -o $2 &&
         # notification if request was successful and notif flag was set
@@ -245,7 +256,7 @@ send_request $1 $out_file $3 |&
 # logging for requests
 if [[ $1 == request ]]
     then
-        tee "logs/v$version_script-$version_request_$year/$filename_date.log" #-a
+        tee "${log_folder}/${filename_date}.log" #-a
     else
         cat
 fi
