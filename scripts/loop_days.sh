@@ -34,8 +34,8 @@ month_end=$4
 
 
 # check and create log folders $version_$year
-if [ ! -d "logs/$version_$year" ]; then
-    mkdir -p "logs/$version_$year"
+if [ ! -d "logs/${version}_$year" ]; then
+    mkdir -p "logs/${version}_$year"
 fi
 
 
