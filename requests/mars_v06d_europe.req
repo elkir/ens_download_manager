@@ -11,6 +11,6 @@ stream=enfo,
 time=00:00:00,
 type=pf,
 AREA=72/-12/33/34.8,
-GRID=0.3/0.3,
+GRID=0.4/0.4,
 target="output"
 
