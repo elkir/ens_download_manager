@@ -38,6 +38,9 @@ if [ ! -d "logs/${version}_$year" ]; then
     mkdir -p "logs/${version}_$year"
 fi
 
+# make sure to run the main version of the script
+git switch main.mirror
+git merge main
 
 params=()
 files=()
