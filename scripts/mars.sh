@@ -92,9 +92,10 @@ datetime=$(date -Iminutes | sed "s/T/ /"| sed "s/+.*//")
 out_file="$out_folder/$filename_date.$extension"
 #only the version number, not the letter
 version_request=${2:1:2}
+version_letter=${2:3:1}
 
 # if version letter is "r" 
-if [[ ${2:3:1} == "r" ]] 
+if [[ $version_letter == "r" ]] 
     then
         hdates=()
         for i in $(seq $((year-20)) $((year-1))); do
@@ -132,6 +133,7 @@ datetime = $datetime
 out_folder = $out_folder
 extension = $extension
 out_file = $out_file
+hdate_line = $hdate_line
 EOF
 fi
 
@@ -224,6 +226,13 @@ EOF
         fi |
         # insert date
         sed "4 i date = $3,"|
+        # insert hdate for reforecast
+        if [[ $version_letter == "r" ]]
+            then
+                sed "5 i hdate = $hdate_line,"
+            else
+                cat
+        fi |
     # main request
     mars -o $2 &&
         # notification if request was successful and notif flag was set
