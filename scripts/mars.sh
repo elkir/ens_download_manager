@@ -102,7 +102,8 @@ if [[ $request_letter == "r" ]]
         for i in $(seq $((year-20)) $((year-1))); do
             hdates+=($(date -d "$i-$(date -d $date +%m)-$(date -d $date +%d)" +%Y-%m-%d))
         done
-        hdate_line="hdate=${hdates[*]// //},"
+        hdate_line="${hdates[*]}" # two steps because of bash
+        hdate_line="hdate=${hdate_line// //},"
         # get length of dates array
         Nyears=${#hdates[@]}
     else
@@ -230,7 +231,7 @@ EOF
         # insert hdate for reforecast
         if [[ $request_letter == "r" ]]
             then
-                sed "5 i hdate = $hdate_line,"
+                sed "5 i $hdate_line"
             else
                 cat
         fi |
