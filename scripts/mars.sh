@@ -86,14 +86,13 @@ fi
 
 date=$3
 year=${date:0:4}
+version_request=${2:1:2} #only the version number, not the letter
+request_letter=${2:3:1}
 filename_req="mars_$2_europe";
 filename_date="mars_$2_$3_$(date -d $3 +%a)"; #date + Mon/Thu
 datetime=$(date -Iminutes | sed "s/T/ /"| sed "s/+.*//")
 out_file="$out_folder/$filename_date.$extension"
 log_folder="logs/v${version_script}-${version_request}_${year}"
-#only the version number, not the letter
-version_request=${2:1:2}
-request_letter=${2:3:1}
 
 # if version letter is "r" 
 if [[ $request_letter == "r" ]] 
