@@ -1,4 +1,4 @@
-# use as ./scripts/loop_days.sh [-f] v04-05 2017 01 12
+# use as ./scripts/loop_days.sh [-f] v04-05 2017 01 12 edr
 
 # loop through every date in the year 2017 in the format YYYY-MM-DD and print it if the date exists and is Monday or Thursday
 # print Thu for Thursday and Mon for Monday
@@ -9,6 +9,7 @@
 # 2017: year to loop through
 # 01: start month
 # 12: end month
+# edr: request types to loop through
 
 
 
@@ -31,6 +32,7 @@ version_request=$(echo $version | cut -d'-' -f2)
 year=$2
 month_start=$3
 month_end=$4
+request_types=$5
 
 
 # check and create log folders $version_$year
@@ -49,7 +51,7 @@ files=()
 for i in $(eval echo {$year..$year}-{$month_start..$month_end}-{01..31}); do
     if date -d $i &> /dev/null; then # if date exists
         if [[ $(date -d $i +%u) == 1 ]] || [[ $(date -d $i +%u) == 4 ]]; then # if monday of thursday
-            for x in e d;
+            for x in $(echo $request_types | grep -o .);
             do
                 # skip if file already exists and force flag is not set
                 if [ -f "data/mars_v$version_request${x}_${i}_$(date -d $i +%a).grib" ] && [ $force == false ];
