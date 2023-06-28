@@ -15,21 +15,42 @@
 # URL for telegram notifications
 TELEGRAM_URL="https://api.telegram.org/bot5906083900:AAGkxZsnL-YvnoHVzotK-_VHNLdhx-UoAOM/sendMessage?chat_id=5889704030"
 
-# catch force flag
-if [ "$1" == "-f" ]; then
-    force=true
-    shift
-else
-    force=false
-fi
-
-# set default regime to semiweekly
+# Initialize variables with default values
+force=false
 regime="S"
+dry_run=false
 
-# catch regime flag and argument
-if [ "$1" == "-r" ]; then
-    regime=$2
-    shift 2
+# Process command line options
+while getopts ":fDn:r:" opt; do
+    case $opt in
+        f)
+            force=true
+            ;;
+        D)
+            regime="D"
+            ;;
+        n)
+            dry_run=true
+            ;;
+        r)
+            regime="$OPTARG"
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument" >&2
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# Check if all required positional arguments are provided
+if [ $# -lt 4 ]; then
+    echo "Usage: ./scripts/loop_days.sh [-f] [-r REGIME] [-n] v05-05 2017-01[-01] 2017-12[-20] edrf" >&2
+    exit 1
 fi
 
 version=$1
@@ -142,33 +163,42 @@ for param in "${params[@]}"; do
         # print bold and colored
         sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
             -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
-    ./scripts/mars.sh -N request v$version_request$x "$i"
+    if [ $dry_run == true ]; then
+        echo "Dry run: ./scripts/mars.sh -N request v$version_request$x \"$i\""
+    else
+        ./scripts/mars.sh -N request v$version_request$x "$i"
+    fi
     #|| 
     #   echo "v04${x}_$i" >> logs/$version_$start_year/failed_requests.log
 done
 
-# check if all files exist and print missing files
-echo "Checking if all files exist:" | 
-    sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
-        -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
-missing_files=()
-
-for file in "${files[@]}"; do
-    if [ ! -f "data/$file" ]; then
-        echo "$file does not exist" | 
-            sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
-                -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/"
-        missing_files+=("$file")
-    fi
-done
-
-# if no files are missing, then print a message
-if [ ${#missing_files[@]} -eq 0 ]; then
-    echo "All files exist" | 
+if [ $dry_run == true ]; then
+    echo "Dry run complete. No files were processed."
+    missing_files=()
+    missing_files+="N/A dry-run"
+else
+    # check if all files exist and print missing files
+    echo "Checking if all files exist:" | 
         sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
             -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
-fi
+    missing_files=()
 
+    for file in "${files[@]}"; do
+        if [ ! -f "data/$file" ]; then
+            echo "$file does not exist" | 
+                sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
+                    -e "s/^/$(tput setaf 1)/" -e "s/$/$(tput sgr0)/"
+            missing_files+=("$file")
+        fi
+    done
+
+    # if no files are missing, then print a message
+    if [ ${#missing_files[@]} -eq 0 ]; then
+        echo "All files exist" | 
+            sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
+                -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
+    fi
+fi
 # if all the processes are done, then send a notification to telegram
 MESSAGE="MARS Loop between $start_date and $end_date DONE at $(hostname).hpc%0AFiles unsuccessful:%0A$(printf "%s%%0A" "${missing_files[@]}")"
 wait && curl -s "$TELEGRAM_URL&text=$MESSAGE"
