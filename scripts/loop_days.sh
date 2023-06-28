@@ -14,7 +14,7 @@
 # edrf: request types to loop through
 
 # URL for telegram notifications
-TELEGRAM_URL="https://api.telegram.org/bot5906083900:AAGkxZsnL-YvnoHVzotK-_VHNLdhx-UoAOM/sendMessage?chat_id=5889704030"
+read -r TELEGRAM_URL < ./telegram_url
 
 # Initialize variables with default values
 force=false
