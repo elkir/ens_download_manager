@@ -94,7 +94,7 @@ end_month=$(date -d "$end_date" +%m)
 end_day=$(date -d "$end_date" +%d)
 
 # check and create log folders $version_$start_year
-if [ ! -d "logs/${version}_$start_year" ]; then
+if [ ! $dry_run ] && [ ! -d "logs/${version}_$start_year" ]; then
     mkdir -p "logs/${version}_$start_year"
 fi
 
