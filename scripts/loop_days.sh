@@ -5,9 +5,11 @@
 # print Thu for Thursday and Mon for Monday
 
 # Arguments:
+# -h: help flag, prints usage
 # -n: dry run flag, if set, then the script will not download any files
 # -f: force flag, if set, then the script will not check if the file already exists and will overwrite it
 # -r REGIME: regime flag, determines the looping regime, options are "D" for daily and "S" for semiweekly (default is semiweekly)
+# -D: daily flag, equivalent to -r D
 # v05-07: version: first number is the version of the script, second number is the version of the request
 # start_date: start date in the format YYYY-MM-DD or YYYY-MM
 # end_date: end date in the format YYYY-MM-DD or YYYY-MM
@@ -22,8 +24,12 @@ regime="S"
 dry_run=false
 
 # Process command line options
-while getopts "nfDr:" opt; do
+while getopts "hnfDr:" opt; do
     case $opt in
+        h) 
+            echo "Usage: ./scripts/loop_days.sh [-f] [-n] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf"
+            exit 1
+            ;;
         f)
             force=true
             ;;
@@ -50,7 +56,7 @@ shift $((OPTIND - 1))
 
 # Check if all required positional arguments are provided
 if [ $# -lt 4 ]; then
-    echo "Usage: ./scripts/loop_days.sh [-f] [-r REGIME] [-n] v05-05 2017-01[-01] 2017-12[-20] edrf" >&2
+    echo "Usage: ./scripts/loop_days.sh [-f] [-n] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf"
     exit 1
 fi
 
@@ -115,7 +121,7 @@ process_date() {
     # skip if file already exists and force flag is not set
     if [ -f "data/$filename" ] && [ $force == false ]; then
         echo "data/$filename already exists"
-        continue
+        return 0
     fi
 
     # save the request parameters to an array
