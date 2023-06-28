@@ -158,6 +158,7 @@ echo "This loop has PID: $$" |
 all_files=$(printf "%s%%0A" "${files[@]}")
 # Notify telegram loop has started
 MESSAGE="ECMWF MARS Loop between $start_date and $end_date STARTED at $(hostname).hpc%0AProcess PID: $$%0AFiles:%0A$all_files"
+[[ $dry_run == true ]] && MESSAGE="DRY RUN: $MESSAGE"
 curl -s "$TELEGRAM_URL&text=$MESSAGE"
 echo -e "\n"
 
@@ -208,5 +209,6 @@ else
 fi
 # if all the processes are done, then send a notification to telegram
 MESSAGE="MARS Loop between $start_date and $end_date DONE at $(hostname).hpc%0AFiles unsuccessful:%0A$(printf "%s%%0A" "${missing_files[@]}")"
+[[ $dry_run == true ]] && MESSAGE="DRY RUN: $MESSAGE"
 wait && curl -s "$TELEGRAM_URL&text=$MESSAGE"
 echo -e '\n'
