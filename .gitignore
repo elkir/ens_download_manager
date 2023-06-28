@@ -4,8 +4,14 @@ test*
 lists
 *copilotstuff.sh
 sandbox/copilot*
-.vscode/
+telegram_url*
+
 logs
+
+#VS code
+.vscode
+*.code-workspace
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
