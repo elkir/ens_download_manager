@@ -1,10 +1,11 @@
-# use as ./scripts/loop_days.sh [-f] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf
+# use as ./scripts/loop_days.sh [-f] [-n] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf
 
 
 # loop through every date between the specified start and end dates and print it if the date exists and is Monday or Thursday (or daily if -r flag is provided or -r D is provided)
 # print Thu for Thursday and Mon for Monday
 
 # Arguments:
+# -n: dry run flag, if set, then the script will not download any files
 # -f: force flag, if set, then the script will not check if the file already exists and will overwrite it
 # -r REGIME: regime flag, determines the looping regime, options are "D" for daily and "S" for semiweekly (default is semiweekly)
 # v05-07: version: first number is the version of the script, second number is the version of the request
@@ -21,7 +22,7 @@ regime="S"
 dry_run=false
 
 # Process command line options
-while getopts ":fDn:r:" opt; do
+while getopts "nfDr:" opt; do
     case $opt in
         f)
             force=true
