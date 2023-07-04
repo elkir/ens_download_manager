@@ -8,11 +8,12 @@
 # flags
 # -v: verbose
 # -N: send notification
-version_script="04"
+version_script="05"
+
+
 
 # URL for telegram notifications
-TELEGRAM_URL="https://api.telegram.org/bot5906083900:AAGkxZsnL-YvnoHVzotK-_VHNLdhx-UoAOM/sendMessage?chat_id=5889704030"
-
+read -r TELEGRAM_URL < ./telegram_url
 
 #check for optional -v flag
 if [[ $1 == "-v" ]]

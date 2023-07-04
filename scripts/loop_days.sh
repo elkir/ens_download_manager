@@ -111,7 +111,7 @@ git merge main
 
 params=()
 files=()
-# Check date doesn't exist and output the file name
+# Check file for the date and version doesn't exist and output the file name
 process_date() {
     local current_date=$1
     local x=$2
