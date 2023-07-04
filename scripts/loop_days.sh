@@ -1,4 +1,4 @@
-# use as ./scripts/loop_days.sh [-f] [-n] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf
+# use as ./scripts/loop_days.sh [-f] [-n] [-t <telegram_url>] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf
 
 
 # loop through every date between the specified start and end dates and print it if the date exists and is Monday or Thursday (or daily if -r flag is provided or -r D is provided)
@@ -27,7 +27,7 @@ dry_run=false
 while getopts "hnfDr:t:" opt; do
     case $opt in
         h) 
-            echo "Usage: ./scripts/loop_days.sh [-f] [-n] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf"
+            echo "Usage: ./scripts/loop_days.sh [-f] [-n] [-t TELEGRAM_URL|file][-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf"
             exit 1
             ;;
         f)
@@ -68,7 +68,7 @@ shift $((OPTIND - 1))
 
 # Check if all required positional arguments are provided
 if [ $# -lt 4 ]; then
-    echo "Usage: ./scripts/loop_days.sh [-f] [-n] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf"
+    echo "Usage: ./scripts/loop_days.sh [-f] [-n] [-t <telegram_url>] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf"
     exit 1
 fi
 
@@ -193,7 +193,9 @@ for param in "${params[@]}"; do
 done
 
 if [ $dry_run == true ]; then
-    echo "Dry run complete. No files were processed."
+    echo "Dry run complete. No files were processed." | 
+        sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
+            -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
     missing_files=()
     missing_files+="N/A dry-run"
 else

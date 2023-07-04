@@ -29,7 +29,7 @@ while getopts "vNht:" opt; do
             notif=true
             ;;
         h) 
-            echo "Usage: $0 [-v] [-N] <type> <version> <date>"
+            echo "Usage: $0 [-v] [-N] [-t <telegram_url>] <type> <version> <date>"
             exit 1
             ;;
         t)
