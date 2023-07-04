@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## use as mars.sh [-v] [-N] <type> <version> <date>  
+## use as mars.sh [-v] [-N] [-t <telegram_url>] <type> <version> <date>  
 # arguments
 # $1: type: list[_cost]/request
 # $2: version: v05[d,e,...]
@@ -8,37 +8,60 @@
 # flags
 # -v: verbose
 # -N: send notification
+# -t: telegram_url
+# -h: help
 version_script="05"
-
-
 
 # URL for telegram notifications
 read -r TELEGRAM_URL < ./telegram_url
 
-#check for optional -v flag
-if [[ $1 == "-v" ]]
-    then
-        verbose=true
-        shift
-    else
-        verbose=false
+# Initialize variables with default values
+verbose=false
+notif=false
+
+# Process command line options
+while getopts "vNht:" opt; do
+    case $opt in
+        v)
+            verbose=true
+            ;;
+        N)
+            notif=true
+            ;;
+        h) 
+            echo "Usage: $0 [-v] [-N] <type> <version> <date>"
+            exit 1
+            ;;
+        t)
+            if [[ $OPTARG == http* ]]; then
+                TELEGRAM_URL="$OPTARG"
+            else
+                # if relative path or absolute path
+                if [[ $OPTARG == /* ]]; then
+                    read -r TELEGRAM_URL < "$OPTARG"
+                else
+                    read -r TELEGRAM_URL < "./$OPTARG"
+                fi
+            fi
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument" >&2
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# Check if all required positional arguments are provided
+if [[ $# -ne 3 ]]; then
+    echo "Usage: $0 [-v] [-N] [-t <telegram_url>] <type> <version> <date>"
+    exit 1
 fi
 
-#check for notif flag
-if [[ $1 == "-N" ]]
-    then
-        notif=true
-        shift
-    else
-        notif=false
-fi
-
-# check if all arguments are given
-if [[ $# -ne 3 ]]
-    then
-        echo "Usage: $0 [-v] [-N] <type> <version> <date>"
-        exit 1
-fi
 
 # print which day of the week date  is (in cyan) and bold it
 echo "The date is $(date -d $3 +%A | 

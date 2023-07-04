@@ -24,7 +24,7 @@ regime="S"
 dry_run=false
 
 # Process command line options
-while getopts "hnfDr:" opt; do
+while getopts "hnfDr:t:" opt; do
     case $opt in
         h) 
             echo "Usage: ./scripts/loop_days.sh [-f] [-n] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf"
@@ -41,6 +41,18 @@ while getopts "hnfDr:" opt; do
             ;;
         r)
             regime="$OPTARG"
+            ;;
+        t)
+            if [[ $OPTARG == http* ]]; then
+                TELEGRAM_URL="$OPTARG"
+            else
+                # if relative path or absolute path
+                if [[ $OPTARG == /* ]]; then
+                    read -r TELEGRAM_URL < "$OPTARG"
+                else
+                    read -r TELEGRAM_URL < "./$OPTARG"
+                fi
+            fi
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -172,9 +184,9 @@ for param in "${params[@]}"; do
         sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
             -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
     if [ $dry_run == true ]; then
-        echo "Dry run: ./scripts/mars.sh -N request v$version_request$x \"$i\""
+        echo "Dry run: ./scripts/mars.sh -N -t $TELEGRAM_URL request v$version_request$x \"$i\""
     else
-        ./scripts/mars.sh -N request v$version_request$x "$i"
+        ./scripts/mars.sh -N -t $TELEGRAM_URL request v$version_request$x "$i"
     fi
     #|| 
     #   echo "v04${x}_$i" >> logs/$version_$start_year/failed_requests.log
