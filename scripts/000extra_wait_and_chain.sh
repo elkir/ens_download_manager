@@ -4,4 +4,4 @@ pstree -p | grep screen -C3
 # get PID of the sh process: 121277
 
 # wait for process to finish and start next one:
-tail --pid=121277 -f /dev/null  ; ./scripts/03-04_loop_days.sh 2017 01 12
+tail --pid=121277 -f /dev/null  ; ./scripts/03-04_loop_days.sh 2017-01 2017-12
