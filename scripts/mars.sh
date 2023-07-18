@@ -232,6 +232,9 @@ EOF
         then
             MESSAGE="Request for $filename_date started"
             curl -s "$TELEGRAM_URL&text=$MESSAGE"
+
+            trap 'ERROR_MESSAGE="ERROR: Request for $filename_date failed. Check log files."; \
+                  curl -s "$TELEGRAM_URL&text=$ERROR_MESSAGE"' ERR HUP INT QUIT PIPE TERM
     fi
 
     cat "requests/$filename_req.req" | 
@@ -265,6 +268,8 @@ EOF
             then
                 MESSAGE="Request for $filename_date finished successfully"
                 curl -s "$TELEGRAM_URL&text=$MESSAGE"
+
+                trap - ERR HUP INT QUIT PIPE TERM  # Clear the trap commands
 		echo -e '\n'
         fi
     echo "--------------end -----------------" | sed -e "s/^/$(tput setaf 3)/" -e "s/$/$(tput sgr0)/"
