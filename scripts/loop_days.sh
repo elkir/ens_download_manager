@@ -181,7 +181,6 @@ trap 'onScriptExit' ERR HUP INT QUIT PIPE TERM
 onScriptExit() {
     MESSAGE="ERROR: Loop_days.sh script exited unexpectedly. Possibly due to server shutdown or an error in the script."
     curl -s "$TELEGRAM_URL&text=$MESSAGE"
-    exit 1
 }
 
 # loop through the list of request parameters and run the script
