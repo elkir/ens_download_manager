@@ -181,7 +181,7 @@ onScriptExit() {
     curl -s "$TELEGRAM_URL&text=$MESSAGE"
 }
 # Set a trap for any kind of termination signal
-trap 'onScriptExit' ERR HUP INT QUIT PIPE TERM
+trap 'onScriptExit' EXIT
 
 # loop through the list of request parameters and run the script
 for param in "${params[@]}"; do
@@ -235,4 +235,4 @@ MESSAGE="MARS Loop between $start_date and $end_date DONE at $(hostname).hpc%0AF
 [[ $dry_run == true ]] && MESSAGE="DRY RUN: $MESSAGE"
 wait && curl -s "$TELEGRAM_URL&text=$MESSAGE"
 echo -e '\n'
-trap - ERR HUP INT QUIT PIPE TERM
+trap - EXIT
