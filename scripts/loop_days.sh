@@ -174,14 +174,14 @@ MESSAGE="ECMWF MARS Loop between $start_date and $end_date STARTED at $(hostname
 curl -s "$TELEGRAM_URL&text=$MESSAGE"
 echo -e "\n"
 
-# Set a trap for any kind of termination signal
-trap 'onScriptExit' ERR HUP INT QUIT PIPE TERM
 
 # Function to run when the script exits
 onScriptExit() {
     MESSAGE="ERROR: Loop_days.sh script exited unexpectedly. Possibly due to server shutdown or an error in the script."
     curl -s "$TELEGRAM_URL&text=$MESSAGE"
 }
+# Set a trap for any kind of termination signal
+trap 'onScriptExit' ERR HUP INT QUIT PIPE TERM
 
 # loop through the list of request parameters and run the script
 for param in "${params[@]}"; do
