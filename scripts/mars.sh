@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## use as mars.sh [-v] [-N] [-t <telegram_url>] <type> <version> <date>  
+## use as mars.sh [-vNL] [-t <telegram_url>] <type> <version> <date>  
 # arguments
 # $1: type: list[_cost]/request
 # $2: version: v05[d,e,...]
@@ -10,6 +10,7 @@
 # -N: send notification
 # -t: telegram_url
 # -h: help
+# -L: request only option, don't run list_cost
 version_script="05"
 
 # URL for telegram notifications
@@ -18,9 +19,10 @@ read -r TELEGRAM_URL < ./telegram_url
 # Initialize variables with default values
 verbose=false
 notif=false
+request_only=false
 
 # Process command line options
-while getopts "vNht:" opt; do
+while getopts "vNLht:" opt; do
     case $opt in
         v)
             verbose=true
@@ -29,8 +31,11 @@ while getopts "vNht:" opt; do
             notif=true
             ;;
         h) 
-            echo "Usage: $0 [-v] [-N] [-t <telegram_url>] <type> <version> <date>"
+            echo "Usage: $0 [-vNL] [-t <telegram_url>] <type> <version> <date>"
             exit 1
+            ;;
+        L)
+            request_only=true
             ;;
         t)
             if [[ $OPTARG == http* ]]; then
@@ -58,7 +63,7 @@ shift $((OPTIND - 1))
 
 # Check if all required positional arguments are provided
 if [[ $# -ne 3 ]]; then
-    echo "Usage: $0 [-v] [-N] [-t <telegram_url>] <type> <version> <date>"
+    echo "Usage: $0 [-vNL] [-t <telegram_url>] <type> <version> <date>"
     exit 1
 fi
 
@@ -183,7 +188,7 @@ send_request()
 EOF
     fi
     # recursion: for REQUEST run LIST_COST to check fields
-    if [[ $1 == request ]]
+    if [[ $1 == request ]] && ! $request_only
         then
             echo "REQUEST: Checking if fields are available"
             #run a list_cost and check fields 

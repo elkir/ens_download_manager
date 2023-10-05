@@ -1,4 +1,4 @@
-# use as ./scripts/loop_days.sh [-f] [-n] [-t <telegram_url>] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf
+# use as ./scripts/loop_days.sh [-fnDL] [-t <telegram_url>] [-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf
 
 
 # loop through every date between the specified start and end dates and print it if the date exists and is Monday or Thursday (or daily if -r flag is provided or -r D is provided)
@@ -10,6 +10,8 @@
 # -f: force flag, if set, then the script will not check if the file already exists and will overwrite it
 # -r REGIME: regime flag, determines the looping regime, options are "D" for daily and "S" for semiweekly (default is semiweekly)
 # -D: daily flag, equivalent to -r D
+# -t TELEGRAM_URL: telegram url to send notifications to
+# -L: run only requests, not list-checks 
 # v05-07: version: first number is the version of the script, second number is the version of the request
 # start_date: start date in the format YYYY-MM-DD or YYYY-MM
 # end_date: end date in the format YYYY-MM-DD or YYYY-MM
@@ -22,9 +24,10 @@ read -r TELEGRAM_URL < ./telegram_url
 force=false
 regime="S"
 dry_run=false
+request_only_option=""
 
 # Process command line options
-while getopts "hnfDr:t:" opt; do
+while getopts "hnfDLr:t:" opt; do
     case $opt in
         h) 
             echo "Usage: ./scripts/loop_days.sh [-f] [-n] [-t TELEGRAM_URL|file][-r REGIME] v05-05 2017-01[-01] 2017-12[-20] edrf"
@@ -38,6 +41,9 @@ while getopts "hnfDr:t:" opt; do
             ;;
         n)
             dry_run=true
+            ;;
+        L)
+            request_only_option="-L"
             ;;
         r)
             regime="$OPTARG"
@@ -193,9 +199,9 @@ for param in "${params[@]}"; do
         sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
             -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
     if [ $dry_run == true ]; then
-        echo "Dry run: ./scripts/mars.sh -N -t $TELEGRAM_URL request v$version_request$x \"$i\""
+        echo "Dry run: ./scripts/mars.sh -N $request_only_option -t $TELEGRAM_URL request v$version_request$x \"$i\""
     else
-        ./scripts/mars.sh -N -t $TELEGRAM_URL request v$version_request$x "$i"
+        ./scripts/mars.sh -N -t $TELEGRAM_URL $request_only_option request v$version_request$x "$i"
     fi
     #|| 
     #   echo "v04${x}_$i" >> logs/$version_$start_year/failed_requests.log
