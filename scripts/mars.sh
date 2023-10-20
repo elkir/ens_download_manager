@@ -76,8 +76,7 @@ echo "The date is $(date -d $3 +%A |
 
 ## Conda setup
 # Extract conda initialization block and execute it
-sed -n '/# >>> conda initialize >>>/,/# <<< conda initialize <<</p' ~/.bashrc | 
-while read line; do eval $line; done
+source <(sed -n '/# >>> conda initialize >>>/,/# <<< conda initialize <<</p' ~/.bashrc)
 # conda activate mars-api
 # if exist status 0, suspend error printing
 if conda activate mars-api &> /dev/null
