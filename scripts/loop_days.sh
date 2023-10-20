@@ -137,7 +137,7 @@ process_date() {
     local filename="mars_v$version_request${x}_${current_date}_$(date -d $current_date +%a).grib"
 
     # skip if file already exists and force flag is not set
-    if [ -f "data/$filename" ] && [ $force == false ]; then
+    if [ -f "data/$filename" ] && [[ $force == false ]]; then
         echo "data/$filename already exists"
         return 0
     fi
@@ -198,7 +198,7 @@ for param in "${params[@]}"; do
         # print bold and colored
         sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
             -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
-    if [ $dry_run == true ]; then
+    if [[ $dry_run == true ]]; then
         echo "Dry run: ./scripts/mars.sh -N $request_only_option -t $TELEGRAM_URL request v$version_request$x \"$i\""
     else
         ./scripts/mars.sh -N -t $TELEGRAM_URL $request_only_option request v$version_request$x "$i"
@@ -207,7 +207,7 @@ for param in "${params[@]}"; do
     #   echo "v04${x}_$i" >> logs/$version_$start_year/failed_requests.log
 done
 
-if [ $dry_run == true ]; then
+if [[ $dry_run == true ]]; then
     echo "Dry run complete. No files were processed." | 
         sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/" \
             -e "s/^/$(tput setaf 2)/" -e "s/$/$(tput sgr0)/"
