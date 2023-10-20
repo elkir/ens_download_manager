@@ -73,6 +73,11 @@ echo "The date is $(date -d $3 +%A |
     sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/")" | 
     sed -e "s/^/$(tput setaf 6)/" -e "s/$/$(tput sgr0)/" 
 
+
+## Conda setup
+# Extract conda initialization block and execute it
+sed -n '/# >>> conda initialize >>>/,/# <<< conda initialize <<</p' ~/.bashrc | 
+while read line; do eval $line; done
 # conda activate mars-api
 # if exist status 0, suspend error printing
 if conda activate mars-api &> /dev/null
