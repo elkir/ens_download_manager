@@ -73,6 +73,10 @@ echo "The date is $(date -d $3 +%A |
     sed -e "s/^/$(tput bold)/" -e "s/$/$(tput sgr0)/")" | 
     sed -e "s/^/$(tput setaf 6)/" -e "s/$/$(tput sgr0)/" 
 
+
+## Conda setup
+# Extract conda initialization block and execute it
+source <(sed -n '/# >>> conda initialize >>>/,/# <<< conda initialize <<</p' ~/.bashrc)
 # conda activate mars-api
 # if exist status 0, suspend error printing
 if conda activate mars-api &> /dev/null
@@ -298,7 +302,7 @@ if [[ $1 == list_cost ]]
     then
         echo "LIST_COST:"
         echo "The total full request size is: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | numfmt --to=iec)"
-        echo "The cropped size should be $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/61*2.88)}" | numfmt --to=iec)"
+        echo "The cropped size should be $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^size=\([0-9]*\);/\1/p" | awk "{print int(\$1/56.4)}" | numfmt --to=iec)"
         echo "Number of fields requested: $(($Nfields))"
         echo "Number of fields available: $(cat "$out_folder/$filename_date.list_cost" | sed -n "s/^number_of_fields=\([0-9]*\);/\1/p")"
 fi
