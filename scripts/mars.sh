@@ -132,7 +132,12 @@ if [[ $request_letter == "r" ]]
     then
         hdates=()
         for i in $(seq $((year-20)) $((year-1))); do
-            hdates+=($(date -d "$i-$(date -d $date +%m)-$(date -d $date +%d)" +%Y-%m-%d))
+            if [[ $date == *-02-29 ]]  # check if date is 29th February
+            then
+                hdates+=($(date -d "$i-02-28" +%Y-%m-%d)) # ECMWF calculates 28th instead
+            else
+                hdates+=($(date -d "$i-$(date -d $date +%m-%d)" +%Y-%m-%d))
+            fi
         done
         hdate_line="${hdates[*]}" # two steps because of bash
         hdate_line="hdate=${hdate_line// //},"
